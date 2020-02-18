@@ -1,0 +1,17 @@
+{
+  "name": "pizza_order",
+  "version": "1.0.0",
+  "description": "a refactoring workshop",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha 'test/*.js'",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "UNLICENSED",
+  "dependencies": {},
+  "devDependencies": {
+    "decimal.js": "^10.2.0",
+    "mocha": "^7.0.1"
+  }
+}
