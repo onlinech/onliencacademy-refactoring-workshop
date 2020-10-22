@@ -1,4 +1,5 @@
-varDecimal = require("decimal.js")
+var Decimal = require("decimal.js")
+const Pizza = require('./Pizza');
 /*
  * PizzaOrder.js
  */
@@ -6,81 +7,77 @@ varDecimal = require("decimal.js")
 // Public
 module.exports = PizzaOrder;
 
-functionPizzaOrder(pizzaTypes, ingredients) {​​​​​​​​
-this.pizzaTypes = pizzaTypes;
-this.ingr = ingredients;
-}​​​​​​​​
+function PizzaOrder(pizzaTypes, ingredients) {
+	this.pizzaTypes = pizzaTypes;
+	this.ingr = ingredients;
+}
 
-PizzaOrder.prototype.GetPrice = function (discount) {​​​​​​​​
-this.discount = Decimal(discount);
+const margheritaDescription = "Best margherita in town";
+const customerSpecialDescription = "Customer special pizza with ";
 
-varsum = Decimal(0);
+PizzaOrder.prototype.CalculatePrice = function (discount) {
+	this.discount = Decimal(discount);
 
-for (vari = 0; i < this.pizzaTypes.length; i++) {​​​​​​​​
-varpizzaType = this.pizzaTypes[i];
-switch (pizzaType) {​​​​​​​​
-case"margherita":
-sum = sum.add(this.SummUpIngredientsPrices(this.initializeMargheritaIngredients()));                           
-break;
-case"customerSpecial":
-varingredients = this.ingr
-sum = sum.add(this.SummUpIngredientsPrices(ingredients));                           
-break;
-default:
-sum += 0;
-break;
-        }​​​​​​​​
-    }​​​​​​​​
+	var sum = Decimal(0);
 
-returnsum;
-}​​​​​​​​;
- 
-PizzaOrder.prototype.SummUpIngredientsPrices = function (ingredients) {​​​​​​​​
-varsum = Decimal(0);
-for (propiningredients) {​​​​​​​​
-varingredientPrice = ingredients[prop];
-sum = sum.add(this.GetPizzaPrice(ingredientPrice));
-    }​​​​​​​​
-returnsum; 
-}​​​​​​​​
-PizzaOrder.prototype.initializeMargheritaIngredients = function () {​​​​​​​​
-varingredients = {​​​​​​​​}​​​​​​​​;
-ingredients["margherita"] = 10.90;
- 
-returningredients;
-}​​​​​​​​
+	for (var i = 0; i < this.pizzaTypes.length; i++) {
+		var pizzaType = this.pizzaTypes[i];
+		switch (pizzaType) {
+			case "margherita":
+				var pizza = new Pizza(this.initializeMargheritaIngredients(),this.discount);
+				sum = sum.add(pizza.SummUpIngredientsPrices());
+				break;
+			case "customerSpecial":
+				var ingredients = this.ingr
+				var pizza = new Pizza(ingredients,this.discount);
+				sum = sum.add(pizza.SummUpIngredientsPrices());
 
-PizzaOrder.prototype.GetMargheritaPrice = function () {​​​​​​​​
-returnthis.GetPizzaPrice(10.90);
-}​​​​​​​​
+				break;
+			default:
+				sum += 0;
+				break;
+		}
+	}
 
-PizzaOrder.prototype.GetPizzaPrice = function (price) {​​​​​​​​
-returnDecimal(price).sub((Decimal(price).mul(this.discount)));
-}​​​​​​​​
+	return sum;
+};
 
-PizzaOrder.prototype.Save = function () {​​​​​​​​
-varresult = "<pizzaOrder>";
+PizzaOrder.prototype.initializeMargheritaIngredients = function () {
+	var ingredients = {};
+	ingredients["margherita"] = 10.90;
 
-for (vari = 0; i < this.pizzaTypes.length; i++) {​​​​​​​​
-varpizzaType = this.pizzaTypes[i];
+	return ingredients;
+}
 
-switch (pizzaType) {​​​​​​​​
-case"margherita":
-result += "<pizza><description>Best margherita in town</description><price>" +
-this.SummUpIngredientsPrices(this.initializeMargheritaIngredients()) + "</price></pizza>";
-break;
-case"customerSpecial":
-varsum = Decimal(0);
-sum = sum.add(this.SummUpIngredientsPrices(this.ingr));  
-result += "<pizza><description>Customer special pizza with " + Object.keys(this.ingr).join(",") +
-"</description><price>" + sum +
-"</price></pizza>";
-break;
-default:
-result += string.Empty;
-break;
-        }​​​​​​​​
-    }​​​​​​​​
+PizzaOrder.prototype.IngredientsToString = function (ingredients) {
+	return Object.keys(ingredients).join(",");
+}
 
-returnresult + "</pizzaOrder>";
-}​​​​​​​​;
+PizzaOrder.prototype.GetGeneratedXml = function () {
+	var result = "<pizzaOrder>";
+
+	for (var i = 0; i < this.pizzaTypes.length; i++) {
+		var pizzaType = this.pizzaTypes[i];
+
+		switch (pizzaType) {
+			case "margherita":
+				var pizza = new Pizza(this.initializeMargheritaIngredients(),this.discount);
+				result += "<pizza><description>" + margheritaDescription + "</description><price>" +
+					pizza.SummUpIngredientsPrices() + "</price></pizza>";
+				break;
+			case "customerSpecial":
+				var sum = Decimal(0);
+				var pizza = new Pizza(this.ingr,this.discount);
+				sum = sum.add(pizza.SummUpIngredientsPrices());
+				result += "<pizza><description>" + customerSpecialDescription + this.IngredientsToString(this.ingr) +
+					"</description><price>" + sum +
+					"</price></pizza>";
+				break;
+			default:
+				result += string.Empty;
+				break;
+		}
+	}
+
+	return result + "</pizzaOrder>";
+};

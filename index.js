@@ -13,5 +13,5 @@ ingredients["ham"] = 2;
 const order = new PizzaOrder(["margherita", "customerSpecial"], ingredients);
 const discount = 0.0; // 0.1 --> 10%
 
-console.log("Price: " + order.GetPrice(discount));
-console.log("Save(): " + order.Save());
+console.log("Price: " + order.CalculatePrice(discount));
+console.log("Save(): " + order.GetGeneratedXml());
