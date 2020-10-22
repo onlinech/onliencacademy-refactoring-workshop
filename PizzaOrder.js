@@ -3,12 +3,7 @@ var Decimal = require("decimal.js")
  * PizzaOrder.js
  */
 
-// Private
-// var userCount = 0;
 
-// function somePrivateMethod(num1) {
-// 	return num1 - 0.1;
-// }
 
 
 // Public
