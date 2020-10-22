@@ -3,9 +3,6 @@ var Decimal = require("decimal.js")
  * PizzaOrder.js
  */
 
-
-
-
 // Public
 module.exports = PizzaOrder;
 
@@ -23,7 +20,7 @@ PizzaOrder.prototype.GetPrice = function (discount) {
 		var pizzaType = this.pizzaTypes[i];
 		switch (pizzaType) {
 			case "margherita":
-				sum = sum.add(Decimal(10.90).sub((Decimal(10.90).mul(this.discount))));
+				sum = sum.add(this.GetMargheritaPrice());
 				break;
 			case "customerSpecial":
 				for (prop in this.ingr) {
@@ -39,6 +36,10 @@ PizzaOrder.prototype.GetPrice = function (discount) {
 	return sum;
 };
 
+PizzaOrder.prototype.GetMargheritaPrice = function () {
+	return Decimal(10.90).sub((Decimal(10.90).mul(this.discount)));
+}
+
 PizzaOrder.prototype.Save = function () {
 	var result = "<pizzaOrder>";
 
@@ -48,7 +49,7 @@ PizzaOrder.prototype.Save = function () {
 		switch (pizzaType) {
 			case "margherita":
 				result += "<pizza><description>Best margherita in town</description><price>" +
-					Decimal(10.90).sub((Decimal(10.90).mul(this.discount))) + "</price></pizza>";
+					this.GetMargheritaPrice() + "</price></pizza>";
 				break;
 			case "customerSpecial":
 				var sum = Decimal(0);
