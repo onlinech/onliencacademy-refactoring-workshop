@@ -24,7 +24,8 @@ PizzaOrder.prototype.GetPrice = function (discount) {
 				break;
 			case "customerSpecial":
 				for (prop in this.ingr) {
-					sum = sum.add(Decimal(this.ingr[prop]).sub((Decimal(this.ingr[prop]).mul(this.discount))));
+					var ingredientPrice = this.ingr[prop];
+					sum = sum.add(this.GetPizzaPrice(ingredientPrice));
 				}
 				break;
 			default:
@@ -37,7 +38,11 @@ PizzaOrder.prototype.GetPrice = function (discount) {
 };
 
 PizzaOrder.prototype.GetMargheritaPrice = function () {
-	return Decimal(10.90).sub((Decimal(10.90).mul(this.discount)));
+	return this.GetPizzaPrice(10.90);
+}
+
+PizzaOrder.prototype.GetPizzaPrice = function (price) {
+	return Decimal(price).sub((Decimal(price).mul(this.discount)));
 }
 
 PizzaOrder.prototype.Save = function () {
@@ -54,7 +59,8 @@ PizzaOrder.prototype.Save = function () {
 			case "customerSpecial":
 				var sum = Decimal(0);
 				for (prop in this.ingr) {
-					sum = sum.add(Decimal(this.ingr[prop]).sub((Decimal(this.ingr[prop]).mul(this.discount))));
+					var ingredientPrice = this.ingr[prop];
+					sum = sum.add(this.GetPizzaPrice(ingredientPrice));
 				}
 				result += "<pizza><description>Customer special pizza with " + Object.keys(this.ingr).join(",") +
 					"</description><price>" + sum +
